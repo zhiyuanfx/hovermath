@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 150" width="720" height="150" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#555"/>
+    </marker>
+  </defs>
+  <rect width="720" height="150" fill="#fff"/>
+  <g fill="none" stroke-width="2">
+    <rect x="12" y="34" width="200" height="82" rx="10" stroke="#1f5fbf"/>
+    <rect x="260" y="34" width="200" height="82" rx="10" stroke="#b4570a"/>
+    <rect x="508" y="34" width="200" height="82" rx="10" stroke="#0b7a5a"/>
+    <path d="M214 75 H256" stroke="#555" marker-end="url(#arrow)"/>
+    <path d="M462 75 H504" stroke="#555" marker-end="url(#arrow)"/>
+  </g>
+  <g font-size="13" fill="#666" text-anchor="middle">
+    <text x="112" y="22">Stage 1</text>
+    <text x="360" y="22">Demand is revealed</text>
+    <text x="608" y="22">Stage 2</text>
+    <text x="360" y="138">time</text>
+  </g>
+  <g font-size="16" fill="#1d1d1f" text-anchor="middle">
+    <text x="112" y="70">Place the regular</text>
+    <text x="112" y="92">order <tspan font-style="italic" fill="#1f5fbf">x</tspan></text>
+    <text x="360" y="70">Scenario <tspan font-style="italic">s</tspan> occurs,</text>
+    <text x="360" y="92">demand is <tspan font-style="italic" fill="#b4570a">d<tspan font-size="11" dy="4">s</tspan></tspan></text>
+    <text x="608" y="70">Rush order <tspan font-style="italic" fill="#0b7a5a">y<tspan font-size="11" dy="4">s</tspan></tspan><tspan dy="-4">,</tspan></text>
+    <text x="608" y="92">sell <tspan font-style="italic" fill="#0b7a5a">z<tspan font-size="11" dy="4">s</tspan></tspan><tspan dy="-4"> units</tspan></text>
+  </g>
+</svg>

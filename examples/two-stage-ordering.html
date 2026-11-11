@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hovermath page</title>
+<meta name="generator" content="hovermath">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root {
+  --bg: #fbfaf7; --panel: #ffffff; --ink: #1d1d1f; --muted: #5f6368; --line: #e4e1da;
+  --accent: #2f5d9e; --hl: rgba(255, 190, 0, .26); --hl-strong: rgba(255, 190, 0, .5);
+  --term-hl: rgba(47, 93, 158, .09);
+  --c-blue: #1f5fbf; --c-green: #0b7a5a; --c-orange: #b4570a; --c-purple: #7a3fd1; --c-pink: #b3266b; --c-added: #d97757; --bar-source: #b9b5ab;
+  --bg-blue: rgba(31, 95, 191, .10); --bg-green: rgba(11, 122, 90, .11); --bg-orange: rgba(180, 87, 10, .11);
+  --bg-purple: rgba(122, 63, 209, .10); --bg-neutral: rgba(95, 99, 104, .10); --bg-pink: rgba(179, 38, 107, .10);
+  --tip-bg: #ffffff; --shadow: 0 12px 32px rgba(0, 0, 0, .14);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121417; --panel: #1a1d21; --ink: #e8e6e1; --muted: #a3a8ae; --line: #2c3137;
+    --accent: #8ab4f8; --hl: rgba(255, 200, 60, .20); --hl-strong: rgba(255, 200, 60, .40);
+    --term-hl: rgba(138, 180, 248, .11);
+    --c-blue: #8ab4f8; --c-green: #5ccfa4; --c-orange: #f0a55a; --c-purple: #c4a5ff; --c-pink: #f48fb8; --c-added: #e08a66; --bar-source: #5a616a;
+    --bg-blue: rgba(138, 180, 248, .14); --bg-green: rgba(92, 207, 164, .14); --bg-orange: rgba(240, 165, 90, .14);
+    --bg-purple: rgba(196, 165, 255, .14); --bg-neutral: rgba(163, 168, 174, .14); --bg-pink: rgba(244, 143, 184, .14);
+    --tip-bg: #23272c; --shadow: 0 12px 32px rgba(0, 0, 0, .55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121417; --panel: #1a1d21; --ink: #e8e6e1; --muted: #a3a8ae; --line: #2c3137;
+  --accent: #8ab4f8; --hl: rgba(255, 200, 60, .20); --hl-strong: rgba(255, 200, 60, .40);
+  --term-hl: rgba(138, 180, 248, .11);
+  --c-blue: #8ab4f8; --c-green: #5ccfa4; --c-orange: #f0a55a; --c-purple: #c4a5ff; --c-pink: #f48fb8; --c-added: #e08a66; --bar-source: #5a616a;
+  --bg-blue: rgba(138, 180, 248, .14); --bg-green: rgba(92, 207, 164, .14); --bg-orange: rgba(240, 165, 90, .14);
+  --bg-purple: rgba(196, 165, 255, .14); --bg-neutral: rgba(163, 168, 174, .14); --bg-pink: rgba(244, 143, 184, .14);
+  --tip-bg: #23272c; --shadow: 0 12px 32px rgba(0, 0, 0, .55);
+  color-scheme: dark;
+}
+
+:root { --z: 1.375; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+a { color: var(--accent); }
+.layout { max-width: 1360px; margin: 0 auto; }
+
+/* Outline. By default it is a sticky top bar that holds the title, the viewer controls and a Contents
+   button: the layout on narrow screens, and on wide screens once the reader minimizes the panel.
+   Otherwise, on wide screens, it is a side panel (see the media query near the end of the styles). */
+nav#toc {
+  position: sticky; top: 0; z-index: 30; max-height: 100vh; overflow: auto; padding: 8px 16px;
+  border-bottom: 1px solid var(--line); background: var(--bg);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px;
+}
+.toc-head, .toc-foot { display: contents; }
+.toc-name { order: 1; flex: 1 1 auto; min-width: 0; }
+.toc-title { font-weight: 700; font-size: 15px; }
+.toc-sub { font-size: 12.5px; color: var(--muted); }
+.toc-controls { order: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 13px; }
+.toc-toggle {
+  order: 3; border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+  border-radius: 8px; padding: 5px 10px; font: inherit; font-size: 14px; cursor: pointer;
+}
+.toc-min-btn {
+  display: none; order: 2; border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+  align-self: flex-start; border-radius: 8px; padding: 0 9px; font: inherit; font-size: 16px; line-height: 1.5; cursor: pointer;
+}
+.toc-min-btn:hover { background: var(--term-hl); color: var(--accent); }
+#toc-list, #toc-list ol { list-style: none; margin: 0; padding: 0; }
+#toc-list { order: 4; flex: 0 0 100%; display: none; font-size: 14px; }
+nav#toc.open #toc-list { display: block; }
+#toc-list ol { margin: 2px 0 6px 8px; padding-left: 6px; border-left: 1px solid var(--line); }
+#toc-list a { display: block; padding: 3px 8px; border-radius: 6px; color: var(--ink); text-decoration: none; }
+#toc-list ol a { font-size: 13.5px; color: var(--muted); }
+#toc-list a:hover { background: var(--term-hl); }
+#toc-list a.active { background: var(--term-hl); color: var(--accent); font-weight: 600; }
+.legend { order: 5; flex: 0 0 100%; display: none; gap: 4px; font-size: 13px; }
+nav#toc.open .legend { display: grid; }
+.lbl-long { display: none; }
+.lg { display: flex; align-items: center; gap: 8px; }
+.sw { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+.sw.bar { width: 3px; height: 14px; border-radius: 1px; margin: 0 4px; }
+.switch { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+.sizer { display: flex; align-items: center; gap: 8px; }
+.sizer .seg { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.sizer button { border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13px; padding: 3px 10px; cursor: pointer; }
+.sizer button:hover { background: var(--term-hl); }
+.sizer button:disabled { color: var(--muted); opacity: .5; cursor: default; background: transparent; }
+.sizer output { min-width: 3.4em; text-align: center; font-variant-numeric: tabular-nums; color: var(--muted); }
+.theme { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.theme button { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 12.5px; padding: 4px 10px; cursor: pointer; }
+.theme button[aria-pressed="true"] { background: var(--term-hl); color: var(--accent); font-weight: 600; }
+
+/* Content: every size below is relative to main, which scales with --z (Text size control). */
+main { padding: 30px 44px max(96px, calc(100vh - 260px)); min-width: 0; font-size: calc(1rem * var(--z)); }
+.eyebrow { margin: 0; font-size: .8em; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+h1 { font-size: 1.7em; line-height: 1.2; margin: .2em 0 .35em; letter-spacing: -.01em; }
+.byline { margin: 0; font-size: 1em; }
+.venue { margin: .15em 0 .7em; color: var(--muted); font-size: .9em; }
+.links { display: flex; flex-wrap: wrap; gap: .5em; margin: .2em 0 1em; }
+.btn-link {
+  border: 1px solid var(--line); border-radius: 8px; padding: .15em .7em; text-decoration: none;
+  color: var(--accent); background: var(--panel); font-size: .88em; font-weight: 600;
+}
+.btn-link:hover { background: var(--term-hl); }
+h2.sec {
+  font-size: 1.35em; margin: 2em 0 .3em; scroll-margin-top: 16px; letter-spacing: -.005em;
+  display: flex; align-items: baseline; gap: .45em; flex-wrap: wrap;
+}
+.secnum { color: var(--accent); }
+p { max-width: 82ch; }
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: .9em 1.15em .8em; margin: .9em 0; scroll-margin-top: 16px;
+}
+.card-head { display: flex; align-items: baseline; gap: .6em; flex-wrap: wrap; margin-bottom: .2em; }
+.tag {
+  font-weight: 700; font-size: .84em; color: var(--accent); border: 1px solid var(--line);
+  border-radius: 6px; padding: 0 .45em; font-variant-numeric: tabular-nums;
+}
+.card-title { font-size: 1.06em; font-weight: 650; margin: 0; }
+.para { margin: .55em 0; }
+/* Explanation placed directly under the equations it describes */
+/* Gray bar: the source's own explanation. Clay bar (.added): an explanation we added. */
+.expl { margin: -.15em 0 1.2em; padding: .1em 0 .1em .8em; border-left: 3px solid var(--bar-source); max-width: 82ch; }
+.expl.added { border-left-color: var(--c-added); }
+.expl + .expl { margin-top: -.75em; }
+.hint { font-size: .85em; color: var(--muted); }
+.kw { font-size: .92em; color: var(--muted); }
+.kw strong { color: var(--ink); }
+.tex-error { color: #c62828; font-family: ui-monospace, Menlo, monospace; font-size: .81em; }
+.callout {
+  border: 1px solid var(--line); border-left: 3px solid var(--accent); background: var(--panel);
+  border-radius: 8px; padding: .65em .9em; font-size: .9em; color: var(--muted); max-width: 82ch;
+}
+
+/* Equations */
+.eqs { margin: .55em 0; border-radius: 8px; scroll-margin-top: 16px; }
+.eqrow {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .9em;
+  padding: .1em .3em; border-radius: 8px; scroll-margin-top: 16px;
+}
+.f { overflow-x: auto; overflow-y: hidden; padding: .3em .1em; }
+.f .katex-display { margin: 0; }
+.f .katex-display.fleqn > .katex { padding-left: 0; }
+.f .katex { font-size: 1.1em; }
+.eqtag { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .92em; white-space: nowrap; }
+.eqrow:target, .eqs:target { animation: flash 2.2s ease-out; }
+@keyframes flash { 0%, 30% { background: var(--hl-strong); } 100% { background: transparent; } }
+a.eqref { color: var(--accent); text-decoration: none; border-bottom: 1px dotted currentColor; white-space: nowrap; }
+a.eqref:hover { background: var(--term-hl); border-radius: 3px; }
+
+/* Reader's notes, figures, tables */
+.rnote {
+  margin: .7em 0; padding: .55em .85em; border-radius: 8px; border: 1px dashed var(--line);
+  border-left: 3px solid var(--muted); background: var(--bg-neutral); font-size: .92em; max-width: 86ch;
+}
+.rnote-tag { display: block; font-size: .78em; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-bottom: .15em; }
+.rnote p { margin: .25em 0; }
+/* Figures. A crop made at zoom z from a PDF is shown at its printed size and scales with the text
+   (width = pixels / (8 z) em, set on load); `width` on a figure overrides this. */
+figure.hm-fig { margin: 1em 0; }
+figure.hm-fig .fig-img {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: .6em;
+  display: flex; justify-content: center;
+}
+figure.hm-fig img { display: block; max-width: 100%; height: auto; max-height: 90vh; object-fit: contain; }
+figure.hm-fig figcaption { font-size: .86em; color: var(--muted); margin-top: .4em; max-width: 82ch; }
+figure.hm-fig .fig-no { font-weight: 700; color: var(--ink); margin-right: .35em; }
+figure.hm-fig .fig-missing {
+  display: none; color: var(--muted); font-size: .88em; padding: .6em .9em;
+  border: 1px dashed var(--line); border-radius: 10px;
+}
+figure.hm-fig.missing .fig-img { display: none; }
+figure.hm-fig.missing .fig-missing { display: block; }
+figure.tblfig { margin: .9em 0; }
+figure.tblfig figcaption { font-size: .86em; color: var(--muted); margin-bottom: .3em; }
+figure.tblfig figcaption .tbl-no { font-weight: 700; color: var(--ink); margin-right: .4em; letter-spacing: .03em; }
+.tbl-wrap { overflow-x: auto; }
+table.tbl { border-collapse: collapse; width: 100%; font-size: .92em; }
+.tbl th, .tbl td { text-align: left; padding: .4em .6em; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.tbl th { font-size: .86em; color: var(--muted); font-weight: 600; }
+.tbl.num td, .tbl.num th { text-align: right; font-variant-numeric: tabular-nums; }
+.tbl.num td:first-child, .tbl.num th:first-child { text-align: left; }
+.tbl th.grp { text-align: center; border-bottom: 1px solid var(--line); }
+.tbl td .katex { font-size: 1.06em; }
+h4.nom { font-size: .95em; margin: 1em 0 .2em; font-style: italic; font-weight: 600; }
+ul.rules, ol.rules { margin: .4em 0; padding-left: 1.3em; }
+ul.rules li, ol.rules li { margin: .35em 0; max-width: 82ch; }
+
+/* Symbols */
+.katex [data-sym], .term { border-radius: 3px; transition: background-color .12s; }
+.katex [data-sym].same, .term.same { background: var(--hl); }
+.katex [data-sym].cur, .term.cur { background: var(--hl-strong); }
+/* A symbol written as a plain word in text, tables and captions (SYM entries with a `word`). */
+.term { text-decoration: underline dotted var(--bar-source); text-decoration-thickness: 1px; text-underline-offset: .2em; }
+#content.on-sym, #content.on-sym * { cursor: help; }
+body:not(.mono) [data-color="blue"] { color: var(--c-blue); }
+body:not(.mono) [data-color="green"] { color: var(--c-green); }
+body:not(.mono) [data-color="orange"] { color: var(--c-orange); }
+body:not(.mono) [data-color="pink"] { color: var(--c-pink); }
+body:not(.mono) [data-color="purple"] { color: var(--c-purple); }
+
+/* Tooltip */
+#tip {
+  position: fixed; z-index: 60; max-width: min(calc(360px * var(--z)), calc(100vw - 16px));
+  background: var(--tip-bg); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow);
+  padding: .7em .95em .8em; font-size: calc(14px * var(--z)); line-height: 1.45; pointer-events: none;
+}
+#tip.eq { max-width: min(calc(640px * var(--z)), calc(100vw - 16px)); }
+#tip.pinned { pointer-events: auto; border-color: var(--accent); }
+.tip-head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; }
+.tip-sym .katex { font-size: 1.4em; }
+.tip-eq { max-height: 62vh; overflow: hidden; font-size: .9em; }
+.tip-eq .eqrow { padding: 0; }
+.badge {
+  font-size: .82em; font-weight: 650; padding: .1em .65em; border-radius: 999px;
+  background: var(--bg-neutral); color: var(--muted); white-space: nowrap;
+}
+.badge[data-color="blue"] { background: var(--bg-blue); color: var(--c-blue); }
+.badge[data-color="green"] { background: var(--bg-green); color: var(--c-green); }
+.badge[data-color="orange"] { background: var(--bg-orange); color: var(--c-orange); }
+.badge[data-color="pink"] { background: var(--bg-pink); color: var(--c-pink); }
+.badge[data-color="purple"] { background: var(--bg-purple); color: var(--c-purple); }
+.tip-close { margin-left: auto; display: none; border: 0; background: transparent; color: var(--muted); font-size: 19px; line-height: 1; cursor: pointer; padding: 0 2px; }
+#tip.pinned .tip-close { display: block; }
+.tip-dom { color: var(--muted); margin-top: 6px; }
+.tip-foot { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.tip-ref { color: var(--accent); text-decoration: none; font-weight: 600; font-size: .93em; }
+.tip-hint { font-size: .86em; color: var(--muted); }
+#tip.pinned .tip-hint { display: none; }
+
+.hm-problems {
+  border: 1px solid #c62828; border-left-width: 4px; border-radius: 8px; padding: .5em .9em; margin: 0 0 1em;
+  font-size: .85em; color: #c62828; background: var(--panel);
+}
+.hm-problems ul { margin: .3em 0 0; padding-left: 1.2em; }
+
+footer.foot { margin-top: 3em; font-size: .81em; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+
+/* Wide screens: the outline is a side panel, unless the reader minimized it into the top bar. */
+@media (min-width: 901px) {
+  body:not(.toc-min) .layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+  body:not(.toc-min) nav#toc {
+    z-index: auto; height: 100vh; max-height: none; padding: 22px 14px 18px 18px; background: none;
+    border-bottom: 0; border-right: 1px solid var(--line);
+    flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 14px;
+  }
+  body:not(.toc-min) .toc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  body:not(.toc-min) .toc-foot { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+  body:not(.toc-min) .toc-controls { flex-direction: column; align-items: flex-start; gap: 10px; }
+  body:not(.toc-min) :is(#toc-list, .legend, .toc-controls) { order: 0; flex: none; }
+  body:not(.toc-min) #toc-list { display: block; }
+  body:not(.toc-min) .legend { display: grid; }
+  body:not(.toc-min) .toc-toggle { display: none; }
+  body:not(.toc-min) .toc-min-btn { display: block; }
+  body:not(.toc-min) .lbl-long { display: inline; }
+  body:not(.toc-min) .lbl-short { display: none; }
+  body.toc-min nav#toc { padding: 8px 44px; }
+  /* Anchors stop below the top bar; the script measures its height into --bar-h. */
+  body.toc-min :is(h2.sec, .card, .eqs, .eqrow) { scroll-margin-top: calc(var(--bar-h, 56px) + 10px); }
+}
+@media (max-width: 900px) {
+  main { padding: 20px 16px 72px; font-size: calc(1rem * min(var(--z), 1.125)); }
+  #tip { font-size: calc(14px * min(var(--z), 1.125)); }
+  .eqrow { gap: .4em; }
+  h2.sec, .card, .eqs, .eqrow { scroll-margin-top: calc(var(--bar-h, 56px) + 10px); }
+}
+/* Phone width: the title and Contents share the first row of the bar, the viewer controls take the second. */
+@media (max-width: 700px) {
+  .toc-sub { display: none; }
+  .toc-toggle { order: 2; }
+  .toc-controls { order: 3; flex: 0 0 100%; }
+}
+@media print {
+  nav#toc, #tip { display: none !important; }
+  .layout { display: block; }
+  main { padding: 0; }
+  .card { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav id="toc" aria-label="Contents">
+    <div class="toc-head">
+      <div class="toc-name">
+        <div class="toc-title" id="toc-title">Document</div>
+        <div class="toc-sub">Hover a symbol; click to pin</div>
+      </div>
+      <button class="toc-min-btn" id="toc-min" type="button" aria-label="Minimize the contents panel" title="Minimize the contents panel">−</button>
+      <button class="toc-toggle" id="toc-toggle" aria-expanded="false" aria-controls="toc-list">Contents</button>
+    </div>
+    <ol id="toc-list"></ol>
+    <div class="toc-foot">
+      <div class="legend" id="legend"></div>
+      <div class="toc-controls">
+        <div class="sizer" role="group" aria-label="Text size">
+          <span class="lbl-long">Text size</span>
+          <span class="seg">
+            <button type="button" id="size-down" aria-label="Smaller text">A−</button>
+            <output id="size-val">138%</output>
+            <button type="button" id="size-up" aria-label="Larger text">A+</button>
+          </span>
+        </div>
+        <label class="switch" title="Color symbols by kind"><input type="checkbox" id="color-toggle" checked> <span class="lbl-long">Color symbols by kind</span><span class="lbl-short">Color</span></label>
+        <div class="theme" role="group" aria-label="Theme">
+          <button type="button" data-theme-set="light">Light</button>
+          <button type="button" data-theme-set="dark">Dark</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <main id="content"></main>
+</div>
+<div id="tip" role="tooltip" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script id="hovermath-images">const IMAGES = {
+"figures/fig01.svg": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MjAgMTUwIiB3aWR0aD0iNzIwIiBoZWlnaHQ9IjE1MCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiPgogIDxkZWZzPgogICAgPG1hcmtlciBpZD0iYXJyb3ciIHZpZXdCb3g9IjAgMCAxMCAxMCIgcmVmWD0iOSIgcmVmWT0iNSIgbWFya2VyV2lkdGg9IjciIG1hcmtlckhlaWdodD0iNyIgb3JpZW50PSJhdXRvIj4KICAgICAgPHBhdGggZD0iTTAgMCBMMTAgNSBMMCAxMCB6IiBmaWxsPSIjNTU1Ii8+CiAgICA8L21hcmtlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjcyMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiNmZmYiLz4KICA8ZyBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiPgogICAgPHJlY3QgeD0iMTIiIHk9IjM0IiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjgyIiByeD0iMTAiIHN0cm9rZT0iIzFmNWZiZiIvPgogICAgPHJlY3QgeD0iMjYwIiB5PSIzNCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSI4MiIgcng9IjEwIiBzdHJva2U9IiNiNDU3MGEiLz4KICAgIDxyZWN0IHg9IjUwOCIgeT0iMzQiIHdpZHRoPSIyMDAiIGhlaWdodD0iODIiIHJ4PSIxMCIgc3Ryb2tlPSIjMGI3YTVhIi8+CiAgICA8cGF0aCBkPSJNMjE0IDc1IEgyNTYiIHN0cm9rZT0iIzU1NSIgbWFya2VyLWVuZD0idXJsKCNhcnJvdykiLz4KICAgIDxwYXRoIGQ9Ik00NjIgNzUgSDUwNCIgc3Ryb2tlPSIjNTU1IiBtYXJrZXItZW5kPSJ1cmwoI2Fycm93KSIvPgogIDwvZz4KICA8ZyBmb250LXNpemU9IjEzIiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4KICAgIDx0ZXh0IHg9IjExMiIgeT0iMjIiPlN0YWdlIDE8L3RleHQ+CiAgICA8dGV4dCB4PSIzNjAiIHk9IjIyIj5EZW1hbmQgaXMgcmV2ZWFsZWQ8L3RleHQ+CiAgICA8dGV4dCB4PSI2MDgiIHk9IjIyIj5TdGFnZSAyPC90ZXh0PgogICAgPHRleHQgeD0iMzYwIiB5PSIxMzgiPnRpbWU8L3RleHQ+CiAgPC9nPgogIDxnIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMxZDFkMWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPgogICAgPHRleHQgeD0iMTEyIiB5PSI3MCI+UGxhY2UgdGhlIHJlZ3VsYXI8L3RleHQ+CiAgICA8dGV4dCB4PSIxMTIiIHk9IjkyIj5vcmRlciA8dHNwYW4gZm9udC1zdHlsZT0iaXRhbGljIiBmaWxsPSIjMWY1ZmJmIj54PC90c3Bhbj48L3RleHQ+CiAgICA8dGV4dCB4PSIzNjAiIHk9IjcwIj5TY2VuYXJpbyA8dHNwYW4gZm9udC1zdHlsZT0iaXRhbGljIj5zPC90c3Bhbj4gb2NjdXJzLDwvdGV4dD4KICAgIDx0ZXh0IHg9IjM2MCIgeT0iOTIiPmRlbWFuZCBpcyA8dHNwYW4gZm9udC1zdHlsZT0iaXRhbGljIiBmaWxsPSIjYjQ1NzBhIj5kPHRzcGFuIGZvbnQtc2l6ZT0iMTEiIGR5PSI0Ij5zPC90c3Bhbj48L3RzcGFuPjwvdGV4dD4KICAgIDx0ZXh0IHg9IjYwOCIgeT0iNzAiPlJ1c2ggb3JkZXIgPHRzcGFuIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0iIzBiN2E1YSI+eTx0c3BhbiBmb250LXNpemU9IjExIiBkeT0iNCI+czwvdHNwYW4+PC90c3Bhbj48dHNwYW4gZHk9Ii00Ij4sPC90c3Bhbj48L3RleHQ+CiAgICA8dGV4dCB4PSI2MDgiIHk9IjkyIj5zZWxsIDx0c3BhbiBmb250LXN0eWxlPSJpdGFsaWMiIGZpbGw9IiMwYjdhNWEiPno8dHNwYW4gZm9udC1zaXplPSIxMSIgZHk9IjQiPnM8L3RzcGFuPjwvdHNwYW4+PHRzcGFuIGR5PSItNCI+IHVuaXRzPC90c3Bhbj48L3RleHQ+CiAgPC9nPgo8L3N2Zz4K"
+};</script>
+<script>
+"use strict";
+const R = String.raw;
+
+/* ==== CONTENT START ====
+   hovermath demo page: a toy two-stage ordering model, written for this example.
+   Everything between the CONTENT START and CONTENT END markers is the document; the rest of the file is the
+   hovermath engine. The format is described in references/format.md of the hovermath skill. */
+
+const DOC = {
+  title: "A Two-Stage Ordering Model",
+  short: "Two-stage ordering (demo)",
+  eyebrow: "hovermath demo page",
+  authors: "A toy model written for this example",
+  source: "Example for the hovermath skill",
+  links: [],
+  note: R`Hover any symbol to see what it means, and click it to pin the definition. Hover an equation number such as (1c), or the model's name (TS), to preview it. Each group of equations is followed by its explanation: a gray bar marks an explanation from the source and a colored bar one that was added while making the page.`,
+  footer: "Made with hovermath. Math rendered with KaTeX.",
+};
+
+const KINDS = {
+  set:  { label: "Set", color: "purple" },
+  idx:  { label: "Index" },
+  par:  { label: "Parameter" },
+  rnd:  { label: "Uncertain demand", color: "orange" },
+  st1:  { label: "First-stage decision", color: "blue" },
+  st2:  { label: "Second-stage decision", color: "green" },
+  fn:   { label: "Computed value" },
+};
+
+const SYM = {
+  S:  { tex: R`\mathcal S`, kind: "set", def: R`Set of demand scenarios, indexed by \(s\).`, ref: "notation" },
+  s:  { tex: R`s`, kind: "idx", def: R`Demand scenario, \(s\in\mathcal S\).`, ref: "notation" },
+  c:  { tex: R`c`, kind: "par", dom: R`c>0`, def: R`Unit cost of the regular order, placed before demand is known.`, ref: "notation" },
+  r:  { tex: R`r`, kind: "par", dom: R`r>c`, def: R`Unit cost of a rush order, placed after demand is known.`, ref: "notation" },
+  p:  { tex: R`p`, kind: "par", dom: R`p>r`, def: R`Selling price per unit.`, ref: "notation" },
+  Y:  { tex: R`Y`, kind: "par", dom: R`Y\ge0`, def: R`Largest rush order the supplier accepts.`, ref: "notation" },
+  pi: { tex: R`\pi_s`, kind: "par", dom: R`\pi_s\ge0,\ \sum_{s}\pi_s=1`, def: R`Probability of scenario \(s\).`, ref: "notation" },
+  d:  { tex: R`d_s`, kind: "rnd", dom: R`d_s>0`, def: R`Demand in scenario \(s\), in units.`, ref: "notation" },
+  x:  { tex: R`x`, kind: "st1", dom: R`x\ge0`, def: R`Regular order: units ordered before demand is known. The same in every scenario.`, ref: "notation" },
+  y:  { tex: R`y_s`, kind: "st2", dom: R`0\le y_s\le Y`, def: R`Rush order in scenario \(s\): units ordered after demand is known.`, ref: "notation" },
+  z:  { tex: R`z_s`, kind: "st2", dom: R`z_s\ge0`, def: R`Units sold in scenario \(s\).`, ref: "notation" },
+  FR: { tex: R`\mathrm{FR}`, word: "FR", kind: "fn", dom: R`\mathrm{FR}\in[0,1]`, def: R`Fill rate (2): the expected share of demand that is served.`, ref: "service" },
+};
+
+const SECTIONS = [
+  { id: "setting", num: "1", title: "Setting", blocks: [
+    { p: R`A seller stocks one product for one selling day. The regular order \({{x}}\) is placed before the day's demand is known. Demand \({{d}}\) is then revealed as one of a few scenarios. After that, the seller may place a rush order \({{y}}\) at a higher unit cost, up to a limit, and sells \({{z}}\) units. Unsold units are worth nothing.` },
+    { fig: { n: "1", src: "figures/fig01.svg", width: "34em", cap: R`Order of events. The regular order \({{x}}\) is fixed before demand \({{d}}\) is known; the rush order \({{y}}\) and the sales \({{z}}\) adapt to it.` } },
+  ]},
+  { id: "notation", num: "2", title: "Notation", blocks: [
+    { nomen: [
+      { title: "Sets and indices", keys: ["S", "s"] },
+      { title: "Parameters", keys: ["c", "r", "p", "Y", "pi"] },
+      { title: "Uncertain demand", keys: ["d"] },
+      { title: "Decisions", keys: ["x", "y", "z"] },
+    ]},
+  ]},
+  { id: "model", num: "3", title: "Model", blocks: [
+    { p: R`The two-stage model (TS) chooses the regular order that maximizes expected profit.` },
+    { id: "TS", eqs: [
+      { tag: "1a", tex: R`\text{(TS)}\quad\max\ -{{c}}{{x}}+\sum_{{{s}}\in{{S}}}{{pi}}\,({{p}}{{z}}-{{r}}{{y}})` },
+      { expl: R`(1a) Expected profit: the regular order is paid for in every scenario, while sales revenue and rush-order cost depend on the scenario.` },
+      { tag: "1b", tex: R`{{z}}\le{{d}},\quad\forall{{s}}\in{{S}}` },
+      { tag: "1c", tex: R`{{z}}\le{{x}}+{{y}},\quad\forall{{s}}\in{{S}}` },
+      { expl: R`(1b)–(1c) Sales cannot exceed demand, and cannot exceed the units on hand: the regular order plus the rush order.` },
+      { tag: "1d", tex: R`{{y}}\le{{Y}},\quad\forall{{s}}\in{{S}}` },
+      { expl: R`(1d) The rush order is limited.` },
+      { tag: "1e", tex: R`{{x}}\ge0,\quad{{y}},{{z}}\ge0,\quad\forall{{s}}\in{{S}}` },
+      { expl: R`Only \({{x}}\) has no scenario index: it is decided once, before demand is known. \({{y}}\) and \({{z}}\) have one copy per scenario because they are decided afterwards.`, added: true },
+    ]},
+    { note: R`Because \({{p}}>{{r}}\), a rush unit that can be sold is always worth ordering. So for a given \({{x}}\), the second stage is solved by inspection: \(\sym{y}{y_s}=\min\{\max\{{{d}}-{{x}},0\},{{Y}}\}\) and \(\sym{z}{z_s}=\min\{{{d}},{{x}}+{{y}}\}\).` },
+  ]},
+  { id: "service", num: "4", title: "A Measure of Service", blocks: [
+    { p: R`The fill rate FR summarizes how much of the demand a plan serves:` },
+    { eqs: [
+      { tag: "2", tex: R`{{FR}}=\sum_{{{s}}\in{{S}}}{{pi}}\,\frac{{{z}}}{{{d}}}` },
+      { expl: R`(2) The share of demand served in each scenario, averaged with the scenario probabilities. FR is 1 when every scenario's demand is fully served.` },
+    ]},
+  ]},
+  { id: "plans", num: "5", title: "Comparing Plans", blocks: [
+    { p: R`Take \({{c}}=4\), \({{r}}=7\), \({{p}}=10\), \({{Y}}=20\) and three scenarios: demand 60, 100 or 140 with probabilities 0.3, 0.5 and 0.2. Table 1 evaluates (1a) and (2) for five regular orders, with the second stage chosen as in the note above.` },
+    { table: { no: "TABLE 1", title: "Expected profit and FR of five regular orders", cls: "num",
+      head: [[R`Regular order \({{x}}\)`, "Expected profit", "FR"]], rows: [
+        ["60", "402", "0.814"],
+        ["80", "462", "0.943"],
+        ["100", "492", "0.971"],
+        ["120", "452", "1.000"],
+        ["140", "400", "1.000"],
+      ]}},
+    { p: R`Expected profit is highest at \({{x}}=100\). Ordering more raises FR to 1 but lowers expected profit, because the extra units are needed only in the high-demand scenario.` },
+  ]},
+];
+/* ==== CONTENT END ==== */
+
+/* ---------------- Rendering ---------------- */
+const MACROS = { "\\sym": "\\htmlData{sym=#1}{#2}" };
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const EQ = {};
+const PROBLEMS = [];
+const problem = (msg) => { if (!PROBLEMS.includes(msg)) PROBLEMS.push(msg); console.error(msg); };
+
+function prep(tex, live) {
+  let out = tex.replace(/\{\{(\w+)\}\}/g, (m, k) => {
+    const s = SYM[k];
+    if (!s) { problem("Unknown symbol key: " + k); return m; }
+    return live ? `\\sym{${k}}{${s.tex}}` : `{${s.tex}}`;
+  });
+  if (!live) out = out.replace(/\\sym\{\w+\}/g, "");
+  return out;
+}
+function tex2html(tex, display, live = true) {
+  try {
+    return katex.renderToString(prep(tex, live), {
+      displayMode: display, fleqn: display, throwOnError: true, strict: "ignore",
+      trust: (c) => c.command === "\\htmlData", macros: { ...MACROS },
+    });
+  } catch (err) {
+    problem("Formula does not render: " + tex.slice(0, 80) + " (" + String(err.message || err).slice(0, 120) + ")");
+    return `<span class="tex-error">${esc(tex)}</span>`;
+  }
+}
+function linkify(h) {
+  return h.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, text, href) =>
+    `<a href="${href}"${/^https?:|\.pdf/.test(href) ? ' target="_blank" rel="noopener"' : ""}>${text}</a>`);
+}
+/* Everything the author defines is hoverable, not only math symbols. A name the source defines and the text
+   writes as a plain word (an index such as TF, a case label such as B0) is a SYM entry with `word: "TF"`,
+   or a list of words, and is hoverable wherever the word appears in prose, table cells and captions.
+   General abbreviations of the field are not defined by the source and get no entry.
+   Tags are skipped, so attributes are never touched. */
+const WORDS = Object.fromEntries(Object.entries(SYM).flatMap(([k, s]) => [].concat(s.word || []).map((w) => [w, k])));
+const WORD_RE = Object.keys(WORDS).length ? new RegExp("(^|[^\\w-])(" + Object.keys(WORDS)
+  .sort((a, b) => b.length - a.length).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")(?![\\w-])", "g") : null;
+function markWords(h) {
+  if (!WORD_RE) return h;
+  return h.split(/(<[^>]+>)/).map((seg) => seg.startsWith("<") ? seg :
+    seg.replace(WORD_RE, (m, pre, w) => `${pre}<span class="term" data-sym="${WORDS[w]}">${w}</span>`)).join("");
+}
+function rich(str, live = true) {
+  return str.split(/(\\\([\s\S]+?\\\))/g).map((part) => {
+    if (part.startsWith("\\(") && part.endsWith("\\)")) return tex2html(part.slice(2, -2), false, live);
+    let h = linkify(esc(part).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"));
+    if (live) h = markWords(h.replace(/\(([A-Za-z0-9][\w.'*-]{0,15})\)/g, (m, id) =>
+      EQ[id] ? `<a class="eqref" href="#${EQ[id].anchor}" data-eq="${id}">(${id})</a>` : m));
+    return h;
+  }).join("");
+}
+
+function eachBlock(fn) {
+  for (const s of SECTIONS) {
+    (s.blocks || []).forEach(fn);
+    (s.subs || []).forEach((u) => u.blocks.forEach(fn));
+  }
+}
+function collectEqs() {
+  const groups = {};
+  eachBlock((b) => {
+    if (!b.eqs) return;
+    if (b.id) EQ[b.id] = { rows: b.eqs.filter((r) => r.tex), anchor: `eq-${b.id}` };
+    for (const r of b.eqs) {
+      if (!r.tag) continue;
+      EQ[r.tag] = { rows: [r], anchor: `eq-${r.tag}` };
+      const g = r.tag.match(/^(.*\d)[a-z]$/);
+      if (g) (groups[g[1]] = groups[g[1]] || []).push(r);
+    }
+  });
+  for (const [g, rows] of Object.entries(groups)) if (!EQ[g]) EQ[g] = { rows, anchor: `eq-${rows[0].tag}` };
+}
+
+function figHTML(f) {
+  const src = IMAGES[f.src] || f.src;
+  const label = f.label !== undefined ? f.label : (f.n ? `Fig. ${f.n}.` : "");
+  const size = f.width ? ` style="width:${esc(f.width)}"`
+    : ` onload="this.style.width=(this.naturalWidth/${8 * Number(f.zoom || DOC.figZoom || 3)})+'em'"`;
+  return `<figure class="hm-fig"${f.n ? ` id="fig-${esc(String(f.n))}"` : ""}><div class="fig-img"><img src="${esc(src)}" alt="${esc(label || "Figure")}" loading="lazy"${size}` +
+    ` onerror="this.closest('figure').classList.add('missing')"></div>` +
+    `<div class="fig-missing">Image not found: <code>${esc(f.src)}</code>.</div>` +
+    `<figcaption>${label ? `<span class="fig-no">${esc(label)}</span>` : ""}${rich(f.cap || "")}</figcaption></figure>`;
+}
+function explHTML(b) {
+  return b.added ? `<p class="expl added" title="Explanation added by us, not from the source">${rich(b.expl)}</p>`
+    : `<p class="expl">${rich(b.expl)}</p>`;
+}
+function eqsHTML(b) {
+  const rows = b.eqs.map((r) => r.expl ? explHTML(r) : `<div class="eqrow"${r.tag ? ` id="eq-${r.tag}"` : ""}>` +
+    `<div class="f">${tex2html(r.tex, true)}</div><span class="eqtag">${r.tag ? `(${r.tag})` : ""}</span></div>`).join("");
+  return `<div class="eqs"${b.id ? ` id="eq-${b.id}"` : ""}>${rows}</div>`;
+}
+function cellHTML(c, tag) {
+  if (typeof c === "string") return `<${tag}>${rich(c)}</${tag}>`;
+  return `<${tag}${c.cs ? ` colspan="${c.cs}" class="grp"` : ""}${c.rs ? ` rowspan="${c.rs}"` : ""}>${rich(c.t)}</${tag}>`;
+}
+function tableHTML(t) {
+  const cap = t.no || t.title ? `<figcaption>${t.no ? `<span class="tbl-no">${esc(t.no)}</span>` : ""}${t.title ? rich(t.title) : ""}</figcaption>` : "";
+  return `<figure class="tblfig">${cap}<div class="tbl-wrap"><table class="tbl ${t.cls || ""}"><thead>` +
+    t.head.map((row) => `<tr>${row.map((c) => cellHTML(c, "th")).join("")}</tr>`).join("") + `</thead><tbody>` +
+    t.rows.map((row) => `<tr>${row.map((c) => cellHTML(c, "td")).join("")}</tr>`).join("") + `</tbody></table></div></figure>`;
+}
+function blocksHTML(blocks) {
+  return blocks.map((b) => {
+    if (b.eqs) return eqsHTML(b);
+    if (b.table) return tableHTML(b.table);
+    if (b.note) return `<aside class="rnote"><span class="rnote-tag">${esc(b.label || "Reader's note")}</span>${rich(b.note)}</aside>`;
+    if (b.fig) return figHTML(b.fig);
+    if (b.kw) return `<p class="kw"><strong>${esc(b.label || "Keywords")}</strong> — ${esc(b.kw)}</p>`;
+    if (b.hint) return `<p class="hint">${rich(b.hint)}</p>`;
+    if (b.nomen) return b.nomen.map((g) => `<h4 class="nom">${esc(g.title)}</h4><div class="tbl-wrap"><table class="tbl"><tbody>` +
+      g.keys.map((k) => `<tr><td style="width:9em">${tex2html(`{{${k}}}`, false)}</td><td>${rich(SYM[k].def)}</td></tr>`).join("") +
+      `</tbody></table></div>`).join("");
+    if (b.expl) return explHTML(b);
+    if (b.ul || b.ol) {
+      const tag = b.ul ? "ul" : "ol";
+      return `<${tag} class="rules">${(b.ul || b.ol).map((t) => `<li>${rich(t)}</li>`).join("")}</${tag}>`;
+    }
+    return `<p class="para">${rich(b.p)}</p>`;
+  }).join("");
+}
+
+function glossaryHTML() {
+  let h = `<h2 class="sec" id="glossary"><span>Symbol glossary</span></h2>
+    <p class="hint">Every symbol and defined term on this page, by kind.</p>`;
+  for (const kind of Object.keys(KINDS)) {
+    const keys = Object.keys(SYM).filter((k) => SYM[k].kind === kind);
+    if (!keys.length) continue;
+    h += `<article class="card"><div class="card-head"><h3 class="card-title">${esc(KINDS[kind].label)}</h3></div><div class="tbl-wrap"><table class="tbl"><tbody>` +
+      keys.map((k) => `<tr><td style="width:9em">${tex2html(`{{${k}}}`, false)}</td><td>${rich(SYM[k].def)}${SYM[k].dom ? `<div class="hint">${tex2html(SYM[k].dom, false, false)}</div>` : ""}</td></tr>`).join("") +
+      `</tbody></table></div></article>`;
+  }
+  return h;
+}
+
+function buildContent() {
+  const linkHTML = (l) => `<a class="btn-link" href="${esc(l.href)}"${/^https?:/.test(l.href) ? ' target="_blank" rel="noopener"' : ""}>${esc(l.label)}</a>`;
+  let h = `<header id="overview">` +
+    (DOC.eyebrow ? `<p class="eyebrow">${esc(DOC.eyebrow)}</p>` : "") +
+    `<h1>${esc(DOC.title)}</h1>` +
+    (DOC.authors ? `<p class="byline">${esc(DOC.authors)}</p>` : "") +
+    (DOC.source ? `<p class="venue">${rich(DOC.source)}</p>` : "") +
+    ((DOC.links || []).length ? `<div class="links">${DOC.links.map(linkHTML).join("")}</div>` : "") +
+    (DOC.note ? `<p class="callout">${rich(DOC.note)}</p>` : "") + `</header>`;
+  for (const s of SECTIONS) {
+    h += `<h2 class="sec" id="${s.id}">${s.num ? `<span class="secnum">${esc(s.num)}.</span>` : ""}<span>${esc(s.title)}</span></h2>`;
+    if (s.blocks) h += `<article class="card">${blocksHTML(s.blocks)}</article>`;
+    for (const u of s.subs || []) {
+      h += `<article class="card" id="${u.id}"><div class="card-head">${u.num ? `<span class="tag">${esc(u.num)}</span>` : ""}` +
+        `<h3 class="card-title">${esc(u.title)}</h3></div>${blocksHTML(u.blocks)}</article>`;
+    }
+  }
+  h += glossaryHTML();
+  if (DOC.footer) h += `<footer class="foot">${rich(DOC.footer)}</footer>`;
+  if (PROBLEMS.length) h = `<div class="hm-problems"><strong>This page has ${PROBLEMS.length} problem(s) to fix:</strong><ul>` +
+    PROBLEMS.map((p) => `<li>${esc(p)}</li>`).join("") + `</ul></div>` + h;
+  return h;
+}
+
+function buildToc() {
+  const items = [{ id: "overview", label: "Overview" },
+    ...SECTIONS.map((s) => ({ id: s.id, label: (s.num ? s.num + ". " : "") + s.title,
+      sub: (s.subs || []).map((u) => ({ id: u.id, label: (u.num ? u.num + " " : "") + u.title })) })),
+    { id: "glossary", label: "Symbol glossary" }];
+  const link = (it) => `<a href="#${it.id}" data-target="${it.id}">${esc(it.label)}</a>`;
+  document.getElementById("toc-list").innerHTML = items.map((it) =>
+    `<li>${link(it)}${it.sub && it.sub.length ? `<ol>${it.sub.map((s) => `<li>${link(s)}</li>`).join("")}</ol>` : ""}</li>`).join("");
+  document.getElementById("toc-title").textContent = DOC.short || DOC.title;
+  document.title = DOC.short || DOC.title;
+  return items.flatMap((it) => [it.id, ...(it.sub || []).map((s) => s.id)]);
+}
+
+function buildLegend() {
+  const used = new Set(Object.values(SYM).map((s) => s.kind));
+  const row = (cls, color, label) => `<div class="lg"><span class="${cls}" style="background:${color}"></span>${esc(label)}</div>`;
+  const kinds = Object.entries(KINDS).filter(([k]) => used.has(k));
+  let h = kinds.filter(([, v]) => v.color).map(([, v]) => row("sw", `var(--c-${v.color})`, v.label)).join("");
+  if (h && kinds.some(([, v]) => !v.color)) h += row("sw", "var(--ink)", "Other symbols");
+  if (document.querySelector("#content .expl:not(.added)")) h += row("sw bar", "var(--bar-source)", "Explanation from the source");
+  if (document.querySelector("#content .expl.added")) h += row("sw bar", "var(--c-added)", "Explanation added by us");
+  document.getElementById("legend").innerHTML = h;
+}
+
+/* ---------------- Interaction ---------------- */
+const tip = document.getElementById("tip");
+const content = document.getElementById("content");
+let curEl = null, pinned = false, hideTimer = 0;
+
+/* KaTeX lays transparent boxes over fractions and summation limits, so the topmost element under
+   the pointer is often not the symbol. Look through the whole stack and take the first glyph that
+   belongs to a symbol, or the first equation-number link. */
+const hasText = (n) => { for (const c of n.childNodes) if (c.nodeType === 3 && c.nodeValue.trim()) return true; return false; };
+function targetFrom(stack) {
+  for (const n of stack) {
+    if (n === tip || tip.contains(n)) return null;
+    if (!content.contains(n)) continue;
+    const a = n.closest("a.eqref");
+    if (a) return a;
+    if (!hasText(n)) continue;
+    const s = n.closest("[data-sym]");
+    if (s) return s;
+  }
+  return null;
+}
+
+function symTipHTML(key) {
+  const s = SYM[key];
+  const kind = KINDS[s.kind] || { label: s.kind };
+  return `<div class="tip-head"><span class="tip-sym" data-color="${kind.color || ""}">${tex2html(s.tex, false, false)}</span>
+    <span class="badge" data-color="${kind.color || ""}">${esc(kind.label)}</span>
+    <button class="tip-close" type="button" aria-label="Close">×</button></div>
+    <div class="tip-def">${rich(s.def, false)}</div>
+    ${s.dom ? `<div class="tip-dom">${tex2html(s.dom, false, false)}</div>` : ""}
+    <div class="tip-foot">${s.ref ? `<a class="tip-ref" href="#${s.ref}">Where it is defined →</a>` : ""}<span class="tip-hint">Click to pin</span></div>`;
+}
+function eqTipHTML(id) {
+  const e = EQ[id];
+  return `<div class="tip-head"><span class="badge">Equation (${esc(id)})</span></div><div class="tip-eq">` +
+    e.rows.map((r) => `<div class="eqrow"><div class="f">${tex2html(r.tex, true, false)}</div><span class="eqtag">${r.tag ? `(${r.tag})` : ""}</span></div>`).join("") +
+    `</div><div class="tip-foot"><span class="tip-hint">Click the number to jump there</span></div>`;
+}
+function place(el) {
+  const r = el.getBoundingClientRect();
+  tip.style.left = "0px"; tip.style.top = "0px";
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  const left = Math.max(8, Math.min(r.left + r.width / 2 - tw / 2, innerWidth - tw - 8));
+  let top = r.bottom + 10;
+  if (top + th > innerHeight - 8) top = r.top - th - 10;
+  tip.style.left = left + "px"; tip.style.top = Math.max(8, top) + "px";
+}
+function clearMarks() {
+  document.querySelectorAll("#content .same, #content .cur").forEach((n) => n.classList.remove("same", "cur"));
+}
+function show(el) {
+  const key = el.dataset.sym, eq = el.dataset.eq;
+  if (key ? !SYM[key] : !EQ[eq]) return;
+  if (curEl !== el) {
+    clearMarks();
+    if (key) {
+      document.querySelectorAll(`#content [data-sym="${key}"]`).forEach((n) => n.classList.add("same"));
+      el.classList.add("cur");
+      tip.innerHTML = symTipHTML(key);
+      tip.classList.remove("eq");
+    } else {
+      tip.innerHTML = eqTipHTML(eq);
+      tip.classList.add("eq");
+    }
+    curEl = el;
+  }
+  tip.hidden = false;
+  content.classList.toggle("on-sym", !!key);
+  place(el);
+}
+function hide() {
+  clearTimeout(hideTimer); hideTimer = 0;
+  tip.hidden = true; tip.classList.remove("pinned"); pinned = false; curEl = null; clearMarks();
+  content.classList.remove("on-sym");
+}
+function pin() { pinned = true; tip.classList.add("pinned"); }
+
+function wire(spyIds) {
+  document.querySelectorAll("#content [data-sym]").forEach((el) => {
+    const s = SYM[el.dataset.sym];
+    if (s && KINDS[s.kind]) { el.dataset.kind = s.kind; if (KINDS[s.kind].color) el.dataset.color = KINDS[s.kind].color; }
+  });
+
+  let raf = 0, lastXY = [0, 0];
+  function onMove() {
+    raf = 0;
+    if (pinned) return;
+    const el = targetFrom(document.elementsFromPoint(lastXY[0], lastXY[1]));
+    if (el) { clearTimeout(hideTimer); hideTimer = 0; show(el); }
+    else if (curEl && !hideTimer) hideTimer = setTimeout(() => { hideTimer = 0; if (!pinned) hide(); }, 140);
+  }
+  document.addEventListener("mousemove", (e) => {
+    lastXY = [e.clientX, e.clientY];
+    if (!raf) raf = requestAnimationFrame(onMove);
+  }, { passive: true });
+  document.documentElement.addEventListener("mouseleave", () => { if (!pinned) hide(); });
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".tip-ref") || e.target.closest(".tip-close")) { hide(); return; }
+    if (e.target.closest("#tip")) return;
+    if (e.target.closest("a.eqref")) { hide(); return; }
+    const el = targetFrom(document.elementsFromPoint(e.clientX, e.clientY));
+    if (el && el.dataset.sym) {
+      if (pinned && curEl === el) { hide(); return; }
+      pinned = false; tip.classList.remove("pinned");
+      show(el); pin(); return;
+    }
+    if (pinned) hide();
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") hide(); });
+  addEventListener("scroll", () => { if (curEl) { if (pinned) place(curEl); else hide(); } spy(); }, { passive: true });
+  addEventListener("resize", () => { if (curEl) hide(); });
+
+  const links = [...document.querySelectorAll("#toc-list a")];
+  function spy() {
+    let cur = spyIds[0];
+    for (const id of spyIds) {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 140) cur = id;
+    }
+    links.forEach((a) => a.classList.toggle("active", a.dataset.target === cur));
+  }
+  spy();
+
+  // Viewer preferences (optional): contents panel, theme, text size and symbol colors.
+  const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+                  set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
+
+  /* Contents panel. Narrow screens: a top bar whose Contents button opens the list. Wide screens: a side
+     panel that the minimize button turns into the same top bar; Contents then brings the side panel back. */
+  const nav = document.getElementById("toc"), btn = document.getElementById("toc-toggle");
+  const wide = matchMedia("(min-width: 901px)");
+  function setMin(min) {
+    // Keep the reader's place: the layout change moves the text.
+    let anchor = null;
+    for (const el of content.querySelectorAll("h2.sec, .card > *")) {
+      if (el.getBoundingClientRect().bottom > 80) { anchor = el; break; }
+    }
+    const before = anchor ? anchor.getBoundingClientRect().top : 0;
+    document.body.classList.toggle("toc-min", min);
+    if (anchor) scrollBy({ top: anchor.getBoundingClientRect().top - before, behavior: "instant" });
+    store.set("hovermath-toc", min ? "min" : "side");
+    btn.setAttribute("aria-expanded", !min);
+    hide(); spy();
+  }
+  document.getElementById("toc-min").addEventListener("click", () => setMin(true));
+  btn.addEventListener("click", () => {
+    if (wide.matches) { setMin(false); return; }
+    const open = nav.classList.toggle("open"); btn.setAttribute("aria-expanded", open);
+  });
+  links.forEach((a) => a.addEventListener("click", () => { nav.classList.remove("open"); if (!wide.matches) btn.setAttribute("aria-expanded", false); }));
+  if (store.get("hovermath-toc") === "min") { document.body.classList.add("toc-min"); btn.setAttribute("aria-expanded", false); }
+  // Anchors stop below the top bar: keep its height in --bar-h (not while the Contents list is open).
+  new ResizeObserver(() => {
+    if (!nav.classList.contains("open")) document.documentElement.style.setProperty("--bar-h", nav.offsetHeight + "px");
+  }).observe(nav);
+  const themeBtns = [...document.querySelectorAll("[data-theme-set]")];
+  function setTheme(t, save = true) {
+    document.documentElement.dataset.theme = t;
+    themeBtns.forEach((b) => b.setAttribute("aria-pressed", b.dataset.themeSet === t));
+    if (save) store.set("hovermath-theme", t);
+  }
+  themeBtns.forEach((b) => b.addEventListener("click", () => setTheme(b.dataset.themeSet)));
+  // First visit: follow the system setting. After that, the reader's choice.
+  const savedTheme = store.get("hovermath-theme");
+  setTheme(savedTheme === "light" || savedTheme === "dark" ? savedTheme
+    : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light", false);
+  const SIZES = [1, 1.125, 1.25, 1.375, 1.5, 1.625, 1.75, 2];
+  const sizeVal = document.getElementById("size-val");
+  const sizeDown = document.getElementById("size-down"), sizeUp = document.getElementById("size-up");
+  let zi = SIZES.indexOf(Number(store.get("hovermath-size")));
+  if (zi < 0) zi = SIZES.indexOf(1.375);
+  function setSize(i) {
+    zi = Math.max(0, Math.min(SIZES.length - 1, i));
+    document.documentElement.style.setProperty("--z", SIZES[zi]);
+    sizeVal.textContent = Math.round(SIZES[zi] * 100) + "%";
+    sizeDown.disabled = zi === 0; sizeUp.disabled = zi === SIZES.length - 1;
+    store.set("hovermath-size", String(SIZES[zi]));
+    hide(); spy();
+  }
+  sizeDown.addEventListener("click", () => setSize(zi - 1));
+  sizeUp.addEventListener("click", () => setSize(zi + 1));
+  setSize(zi);
+
+  const colorBox = document.getElementById("color-toggle");
+  colorBox.checked = store.get("hovermath-color") !== "off";
+  document.body.classList.toggle("mono", !colorBox.checked);
+  colorBox.addEventListener("change", () => {
+    document.body.classList.toggle("mono", !colorBox.checked);
+    store.set("hovermath-color", colorBox.checked ? "on" : "off");
+  });
+}
+
+if (typeof katex === "undefined") {
+  document.getElementById("content").innerHTML =
+    "<p>Math rendering needs an internet connection: KaTeX loads from cdn.jsdelivr.net. " +
+    "An offline copy of this page can be made with hovermath's make_offline script.</p>";
+} else {
+  for (const [k, sy] of Object.entries(SYM)) {
+    if (!KINDS[sy.kind]) problem(`Symbol ${k} has kind "${sy.kind}", which is not in KINDS`);
+    if (sy.ref && !SECTIONS.some((x) => x.id === sy.ref || (x.subs || []).some((u) => u.id === sy.ref)))
+      problem(`Symbol ${k} points to section "${sy.ref}", which does not exist`);
+  }
+  collectEqs();
+  document.getElementById("content").innerHTML = buildContent();
+  const spyIds = buildToc();
+  buildLegend();
+  wire(spyIds);
+  if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+}
+</script>
+</body>
+</html>
