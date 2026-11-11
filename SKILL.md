@@ -44,8 +44,11 @@ The skill is about this presentation. It puts few rules on the content: the page
    do not exist. Then hover a few symbols and equation numbers, and look at the page in the dark theme and
    at phone width.
 6. **Embed the figures**: `python3 scripts/embed_figures.py page.html`. This is the default, see Options.
-7. **Tell the user** where the page is, what you added that is not in the source (explanations, notes,
-   drawn figures), anything in the source you could not read with confidence, and the two options below.
+7. **Hand over one file**: the page, with its figures embedded and the math renderer loaded online. Do not
+   also make an offline copy or keep a figures folder unless the user asked for it.
+8. **Tell the user** where the page is, what you added that is not in the source (explanations, notes,
+   drawn figures), anything in the source you could not read with confidence, and, in one sentence, that an
+   offline copy or a separate figures folder is available if they want one.
 
 ## Content rules
 
@@ -98,7 +101,9 @@ rebuild faithfully.
 
 ## Options
 
-Mention these two to the user when you hand over the page.
+Make the default unless the user asks for the alternative. Mention that the alternatives exist when you hand
+over the page; do not produce them unasked. If you need an offline copy only to check the page in a browser
+that has no internet, make it in a temporary place and delete it afterwards.
 
 | | Default | Alternative |
 | --- | --- | --- |
