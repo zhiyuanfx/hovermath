@@ -3,7 +3,7 @@
 An agent skill that turns a math-heavy document into one interactive HTML page, so that you never have to
 scroll back to a symbol table while reading a line of math.
 
-![A hovermath page: the pointer is on a symbol, and a tooltip shows its kind, definition and domain](docs/screenshot.jpg)
+![A hovermath page: the pointer is on a symbol, and a tooltip shows its kind, definition and domain](docs/screenshot.png)
 
 Give your agent a paper, a PDF, a Markdown or LaTeX file, an optimization model, or a model you have just
 worked out together in the chat, and ask for a hovermath page. You get a single HTML file in which:
@@ -75,7 +75,7 @@ scripts/
   embed_figures.py       puts the figures inside the page
   make_offline.py        makes a copy of a page that works offline
 examples/                the demo page and its figure
-docs/screenshot.jpg      the picture above
+docs/screenshot.png      the picture above
 LICENSE                  MIT License
 ```
 
