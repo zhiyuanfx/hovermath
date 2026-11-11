@@ -46,6 +46,11 @@ The skill is about this presentation. It puts few rules on the content: the page
 6. **Embed the figures**: `python3 scripts/embed_figures.py page.html`. This is the default, see Options.
 7. **Hand over one file**: the page, with its figures embedded and the math renderer loaded online. Do not
    also make an offline copy or keep a figures folder unless the user asked for it.
+
+   Give the user both a rendered preview and the HTML file itself. If your environment can show a rendered
+   page, show it. State the file's full path, and if your environment can attach, send or offer files for
+   download, do that with the `.html` file, so the user can save it and open it in their own browser. Do
+   not paste the page's source code into the conversation; it is far too long to be useful there.
 8. **Tell the user** where the page is, what you added that is not in the source (explanations, notes,
    drawn figures), anything in the source you could not read with confidence, and, in one sentence, that an
    offline copy or a separate figures folder is available if they want one.
